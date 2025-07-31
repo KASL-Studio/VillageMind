@@ -1,58 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>VillageMind – Result</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mind Map Result</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      width: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
-
     .mindmap-container {
-      width: 100vw;
-      height: 100vh;
-      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .back-button {
+      padding: 1rem;
+      text-align: left;
+      background-color: #f0f0f0;
+    }
+    .mindmap {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 1rem;
-      box-sizing: border-box;
     }
-
-    .mindmap-container svg {
-      max-width: 100%;
+    .mindmap img {
+      max-width: 95%;
+      max-height: 95%;
+      width: auto;
       height: auto;
-    }
-
-    .back-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: #333;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .back-button:hover {
-      background: #555;
     }
   </style>
 </head>
 <body>
-  <form action="/" method="get">
-    <button class="back-button" type="submit">← Back</button>
-  </form>
-
   <div class="mindmap-container">
-    <%- mindMapSvg %>
+    <div class="back-button">
+      <a href="/" style="text-decoration: none;">⬅ Back</a>
+    </div>
+    <div class="mindmap">
+      <%- markdown %>
+    </div>
   </div>
 </body>
 </html>
