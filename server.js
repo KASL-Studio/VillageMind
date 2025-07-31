@@ -2,28 +2,27 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const path = require('path');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 
 dotenv.config();
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
-const openai = new OpenAIApi(configuration);
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // serve static files if needed
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve the form page
 app.get('/', (req, res) => {
-  res.render('index'); // Renders views/index.ejs
+  res.render('index');
 });
 
-// Optional JSON hello route
+// Optional hello route
 app.get('/hello', (req, res) => {
   res.json({ message: 'Hello from VillageMind!' });
 });
@@ -40,21 +39,15 @@ app.post('/generate', async (req, res) => {
   const userPrompt = req.body.prompt;
 
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [
-        {
-          role: 'system',
-          content: 'Convert the user prompt into a structured Markdown outline suitable for a mind map.',
-        },
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
+        { role: 'system', content: 'Convert the user prompt into a structured Markdown outline suitable for a mind map.' },
+        { role: 'user', content: userPrompt }
+      ]
     });
 
-    const markdown = completion.data.choices[0].message.content;
+    const markdown = completion.choices[0].message.content;
     res.json({ markdown });
   } catch (error) {
     console.error('OpenAI error:', error);
