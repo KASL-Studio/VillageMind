@@ -1,26 +1,36 @@
-const express = require("express");
-const cors = require("cors");
-const { OpenAI } = require("openai");
-require("dotenv").config();
+const express = require('express');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const path = require('path');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+dotenv.config();
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const port = process.env.PORT || 3000;
 
-app.post("/api/ask", async (req, res) => {
-  try {
-    const { messages } = req.body;
-    const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: messages
-    });
-    res.json(chatCompletion);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error processing request");
-  }
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname))); // serve static files if needed
+
+// ✅ Serve the form page
+app.get('/', (req, res) => {
+  res.render('index'); // Renders views/index.ejs
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+// Optional JSON hello route
+app.get('/hello', (req, res) => {
+  res.json({ message: 'Hello from VillageMind!' });
+});
+
+// ✅ Handle form submission
+app.post('/submit', (req, res) => {
+  const userInput = req.body.input;
+  console.log('Received:', userInput);
+  res.render('thankyou', { userInput });
+});
+
+// Start server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
