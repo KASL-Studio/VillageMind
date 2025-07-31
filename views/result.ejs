@@ -10,36 +10,34 @@
       padding: 0;
       height: 100%;
     }
-    .mindmap-container {
+    .container {
       display: flex;
       flex-direction: column;
-      height: 100%;
+      height: 100vh;
     }
     .back-button {
       padding: 1rem;
-      text-align: left;
-      background-color: #f0f0f0;
+      background: #f0f0f0;
     }
-    .mindmap {
+    .mindmap-wrapper {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: auto;
     }
-    .mindmap img {
-      max-width: 95%;
-      max-height: 95%;
-      width: auto;
-      height: auto;
+    .mindmap-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
     }
   </style>
 </head>
 <body>
-  <div class="mindmap-container">
+  <div class="container">
     <div class="back-button">
-      <a href="/" style="text-decoration: none;">⬅ Back</a>
+      <a href="/">⬅ Back</a>
     </div>
-    <div class="mindmap">
+    <div class="mindmap-wrapper">
       <%- markdown %>
     </div>
   </div>
