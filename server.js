@@ -29,6 +29,21 @@ app.post('/submit', (req, res) => {
   res.render('thankyou', { userInput });
 });
 
+app.post('/generate', async (req, res) => {
+  const userPrompt = req.body.prompt;
+
+  const completion = await openai.createChatCompletion({
+    model: 'gpt-4',
+    messages: [
+      { role: 'system', content: 'Convert the user prompt into a structured Markdown outline suitable for a mind map.' },
+      { role: 'user', content: userPrompt }
+    ]
+  });
+
+  const markdown = completion.data.choices[0].message.content;
+  res.json({ markdown });
+});
+
 // Start server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

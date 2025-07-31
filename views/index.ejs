@@ -2,13 +2,68 @@
 <html>
 <head>
   <title>VillageMind</title>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+    #mindmap {
+      margin-top: 2rem;
+      border: 1px solid #ccc;
+      padding: 1rem;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to VillageMind</h1>
-  <form action="/submit" method="POST">
-    <input type="text" name="input" placeholder="Enter something" required />
+  <h1>VillageMind</h1>
+  <form id="prompt-form">
+    <label for="prompt">Ask a question or provide a topic:</label><br />
+    <textarea id="prompt" name="prompt" required></textarea><br />
     <button type="submit">Submit</button>
   </form>
+
+  <div id="mindmap">
+    <svg id="markmap"></svg>
+  </div>
+
+  <script>
+    const form = document.getElementById('prompt-form');
+    const svg = document.getElementById('markmap');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const prompt = document.getElementById('prompt').value;
+
+      const res = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await res.json();
+
+      // Clear previous SVG content
+      svg.innerHTML = '';
+
+      // Inject the new Markdown response as a mind map
+      const { markmap } = window;
+      const transformer = new markmap.Transformer();
+      const { root } = transformer.transform(data.markdown);
+      markmap.Markmap.create(svg, null, root);
+    });
+  </script>
 </body>
 </html>
 
